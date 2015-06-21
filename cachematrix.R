@@ -36,11 +36,13 @@ makeCacheMatrix <- function(x = matrix()) {
 }
 
 
-## The cacheSolve function calculates inverse of input matrix and assigns value
+## The cacheSolve function calculates inverse of the input matrix and assigns value
 ## to cache only if input matrix has changed.Otherwise inverse matrix in cache is returned.
 
 cacheSolve <- function(list_of_funcs, ...) {
         inv <- list_of_funcs$get_matrix_inv()
+        
+        ## check to see if the inverse matrix variable is NULL.
         if(!is.null(inv)) {
             message("retrieving inverse matrix from cached data..")
             return(inv)
