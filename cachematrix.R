@@ -10,44 +10,45 @@
 
 
 makeCacheMatrix <- function(x = matrix()) {
-    inv <- NULL
+        inv <- NULL
   
-    set_matrix <- function(y) {
-      if (!(is.matrix(x) && is.matrix(y) && dim(x) == dim(y) && all(x == y))) {
-          x <<- y
-          inv <<- NULL
-          m <- message("new matrix..")
+        set_matrix <- function(y) {
+          ## check to verify if the matrix being passed is the same as that in cache.
+          if (!(is.matrix(x) && is.matrix(y) && dim(x) == dim(y) && all(x == y))) {
+                x <<- y
+                inv <<- NULL
+                m <- message("new matrix..")
       
-      } else {
-          m <- message("matrix has not changed..")
-      }
+          } else {
+                ## do nothing
+                m <- message("matrix has not changed..")
+          }
     
-    }
+        }
   
-    get_matrix <- function() x
-    set_matrix_inv <- function(matrix_inv) inv <<- matrix_inv
-    get_matrix_inv <- function() inv
-  
-    list(set_matrix = set_matrix, get_matrix = get_matrix,
-         set_matrix_inv = set_matrix_inv, get_matrix_inv = get_matrix_inv)
+        get_matrix <- function() x
+        set_matrix_inv <- function(matrix_inv) inv <<- matrix_inv
+        get_matrix_inv <- function() inv
+    
+        list(set_matrix = set_matrix, get_matrix = get_matrix,
+           set_matrix_inv = set_matrix_inv, get_matrix_inv = get_matrix_inv)
   
 }
 
 
-## The cacheSolve function returns the inverse of the matrix.
-## 
+## The cacheSolve function calculates inverse of input matrix and assigns value
+## to cache only if input matrix has changed.Otherwise inverse matrix in cache is returned.
 
-cacheSolve <- function(x, ...) {
-        ## Return a matrix that is the inverse of 'x'
-  inv <- x$get_matrix_inv()
-  if(!is.null(inv)) {
-    message("retrieving matrix inverse from cached data..")
-    return(inv)
-  }
-  data <- x$get_matrix()
-  inv <- solve(data,...)
-  x$set_matrix_inv(inv)
-  inv
-  
-  
+cacheSolve <- function(list_of_funcs, ...) {
+        inv <- list_of_funcs$get_matrix_inv()
+        if(!is.null(inv)) {
+            message("retrieving inverse matrix from cached data..")
+            return(inv)
+        }
+        
+        data <- list_of_funcs$get_matrix()
+        inv <- solve(data,...)
+        list_of_funcs$set_matrix_inv(inv)
+        inv
+    
 }
